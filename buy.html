@@ -3,13 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Покупка товара | MR BEKZHAN</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-      margin: 0;
-      background: #111;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
     .container {
       max-width: 420px;
       margin: 60px auto 0 auto;
@@ -133,30 +128,10 @@
       background: #fff200;
       transform: scale(1.04);
     }
-    .back-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: #aaa;
-      text-decoration: none;
-      font-size: 18px;
-      transition: color 0.2s;
-    }
-    .back-link:hover {
-      color: #ffd700;
-    }
     .success {
       color: #0f0;
       margin-top: 18px;
       font-size: 18px;
-    }
-    .fade-in {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
-    }
-    .fade-in.show {
-      opacity: 1;
-      transform: none;
     }
   </style>
 </head>
@@ -172,27 +147,28 @@
     <form id="orderForm" autocomplete="off" class="fade-in">
       <input type="text" name="name" placeholder="Ваше имя" required>
       <input type="tel" name="phone" placeholder="Телефон" required>
-      <!-- Количество убрано -->
       <input type="submit" value="Оформить заказ">
     </form>
     <a href="catalog.html" class="back-link fade-in">← Вернуться в каталог</a>
     <div class="success" id="successMsg" style="display:none;">Спасибо за заказ! Мы свяжемся с вами.</div>
   </div>
+
   <script>
     // Получаем корзину из localStorage
     function getCart() {
       return JSON.parse(localStorage.getItem('cart') || '[]');
     }
-    // Получаем название товара из параметра URL (если переход с buy.html?product=...)
+    
+    // Получаем название товара из параметра URL
     function getProductName() {
       const params = new URLSearchParams(window.location.search);
       const map = {
-        Marcus: 'Shirt “Marcus”',
-        Anuar: 'Shirt “Anuar”',
+        Marcus: 'Shirt "Marcus"',
+        Anuar: 'Shirt "Anuar"',
         SmartHoodie: 'Street Smart Hoodie',
-        TShirt: 'Shirt “T-Shirt”',
-        Japanese: 'T-Shirt “Japanese”',
-        MegaKnight: 'Shirt “Mega Knight”'
+        TShirt: 'Shirt "T-Shirt"',
+        Japanese: 'T-Shirt "Japanese"',
+        MegaKnight: 'Shirt "Mega Knight"'
       };
       const key = params.get('product');
       return map[key] || '';
@@ -200,12 +176,12 @@
 
     // Картинки для всех товаров
     const productImages = {
-      "Shirt “Marcus”": "Marcus1.png",
-      "Shirt “Anuar”": "Anuar1.png",
+      "Shirt "Marcus"": "Marcus1.png",
+      "Shirt "Anuar"": "Anuar1.png",
       "Street Smart Hoodie": "Star1.png",
-      "Shirt “T-Shirt”": "Shirt T-Shirt1.png",
-      "T-Shirt “Japanese”": "Japanese1.png",
-      "Shirt “Mega Knight”": "MegaKnight.png",
+      "Shirt "T-Shirt"": "Shirt T-Shirt1.png",
+      "T-Shirt "Japanese"": "Japanese1.png",
+      "Shirt "Mega Knight"": "MegaKnight.png",
       "Kurt": "Kurt.png",
       "Clash Royale": "FatBitches.png",
       "Mango": "Mango.png",
@@ -216,7 +192,6 @@
       "Lev": "Lev.png",
       "NaLeto": "NaLeto.png",
       "Mops": "Mops.png",
-      // Для обратной совместимости:
       "Classic Hoodie": "Kurt.png",
       "Urban Cap": "FatBitches.png",
       "Denim Jacket": "Mango.png",
@@ -238,13 +213,11 @@
       const productNameDiv = document.getElementById('productName');
       let total = 0;
 
-      // Если корзина не пуста, показываем содержимое корзины
       if (cart.length > 0) {
         cartSummary.style.display = 'block';
         productNameDiv.style.display = 'none';
         cartSummaryList.innerHTML = '';
         cart.forEach(item => {
-          // Названия для новых товаров
           let title = item.title;
           if (title === "Classic Hoodie") title = "Kurt";
           if (title === "Urban Cap") title = "Clash Royale";
@@ -256,7 +229,7 @@
           if (title === "Basic Jeans") title = "Lev";
           if (title === "Fashion Sneakers") title = "NaLeto";
           if (title === "Winter Scarf") title = "Mops";
-          // Картинка
+          
           let img = item.img || productImages[title] || "";
           cartSummaryList.innerHTML += `<li>
             <img class="cart-summary-img" src="${img}" alt="${title}">
@@ -270,10 +243,8 @@
         });
         cartSummaryTotal.textContent = 'Итого: $' + total.toFixed(2);
       } else {
-        // Если корзина пуста, показываем товар из параметра (старое поведение)
         cartSummary.style.display = 'none';
         const pname = getProductName();
-        // Названия для новых товаров
         let displayName = pname;
         if (pname === "Classic Hoodie") displayName = "Kurt";
         if (pname === "Urban Cap") displayName = "Clash Royale";
@@ -307,7 +278,6 @@
       e.preventDefault();
       document.getElementById('orderForm').style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
-      // Очищаем корзину после заказа
       localStorage.removeItem('cart');
     };
   </script>
