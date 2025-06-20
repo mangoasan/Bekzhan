@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>О компании | MR BEKZHAN</title>
+  <style>
+    body {
+      margin: 0;
+      background: #181818;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .nav {
+      padding: 30px 40px 0 0;
+      text-align: right;
+    }
+    .nav a {
+      color: #aaa;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 18px;
+    }
+    .nav a.active, .nav a:hover {
+      color: #fff;
+      font-weight: bold;
+    }
+    .about-container {
+      max-width: 900px;
+      margin: 40px auto 0 auto;
+      padding: 32px 20px 40px 20px;
+      background: #202020;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    h1 {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+    .about-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+    .about-img-frame {
+      border: 3px solid #fff;
+      border-radius: 18px;
+      background: #181818;
+      padding: 16px;
+      box-shadow: 0 4px 24px #0007;
+      max-width: 320px;
+      flex: 1 1 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+      min-height: 220px;
+    }
+    .about-img-frame img {
+      max-width: 100%;
+      max-height: 220px;
+      border-radius: 12px;
+      display: block;
+    }
+    .about-info-frame {
+      border: 2px solid #fff;
+      border-radius: 18px;
+      background: #232323;
+      padding: 24px 28px;
+      flex: 2 1 320px;
+      min-width: 260px;
+      box-shadow: 0 2px 16px #0005;
+      font-size: 20px;
+      line-height: 1.6;
+      color: #eee;
+      margin: 0;
+    }
+    .about-section-title {
+      font-size: 28px;
+      font-family: 'Arial Black', Arial, sans-serif;
+      margin-bottom: 14px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .about-extra {
+      margin-top: 24px;
+      text-align: center;
+      color: #bbb;
+      font-size: 16px;
+    }
+    .back-link {
+      display: block;
+      margin: 40px auto 0 auto;
+      width: 200px;
+      text-align: center;
+      padding: 14px 0;
+      border: 2px solid #fff;
+      border-radius: 32px;
+      color: #fff;
+      background: transparent;
+      text-decoration: none;
+      font-size: 20px;
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 2px;
+    }
+    .back-link:hover {
+      background: #fff;
+      color: #181818;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav fade-in">
+    <a href="MrWest.html">Главная</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="about.html" class="active">О компании</a>
+  </div>
+  <div class="about-container fade-in">
+    <h1 class="fade-in">О компании</h1>
+    <div class="about-row fade-in">
+      <div class="about-img-frame">
+        <img src="Smile1.png" alt="MR BEKZHAN">
+      </div>
+      <div class="about-info-frame">
+        <div class="about-section-title">MR BEKZHAN — стиль и индивидуальность</div>
+        MR BEKZHAN — это современный бренд уличной одежды, вдохновленный свободой, стилем и индивидуальностью.<br>
+        Мы создаём вещи для тех, кто ценит качество, комфорт и самовыражение.<br>
+        Наша команда объединяет молодых дизайнеров и энтузиастов моды.
+      </div>
+    </div>
+    <div class="about-row fade-in">
+      <div class="about-info-frame">
+        <div class="about-section-title">Почему выбирают нас?</div>
+        <ul style="margin:0 0 0 18px; padding:0; color:#fff; font-size:18px;">
+          <li>Современный дизайн и высокое качество материалов</li>
+          <li>Ограниченные коллекции и уникальные принты</li>
+          <li>Доставка по всему Казахстану</li>
+          <li>Поддержка молодых талантов</li>
+        </ul>
+      </div>
+      <div class="about-img-frame">
+        <img src="2man1.jpg" alt="Наша команда">
+      </div>
+    </div>
+    <div class="about-row fade-in">
+      <div class="about-img-frame">
+        <img src="Marcus1.png" alt="Пример продукции">
+      </div>
+      <div class="about-info-frame">
+        <div class="about-section-title">Наши коллекции</div>
+        Каждый месяц мы выпускаем новые коллекции, чтобы вы всегда могли найти что-то особенное.<br>
+        Следите за новинками и акциями на нашем сайте и в социальных сетях!
+      </div>
+    </div>
+    <div class="about-extra fade-in">
+      © 2008-2025 MR BEKZHAN. Все права защищены.
+    </div>
+  </div>
+  <a href="MrWest.html" class="back-link fade-in">← На главную</a>
+  <script>
+    // Анимация появления секций при загрузке
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        document.querySelectorAll('.fade-in').forEach((el, i) => {
+          setTimeout(() => el.classList.add('show'), i * 120);
+        });
+      }, 120);
+    });
+  </script>
+</body>
+</html>

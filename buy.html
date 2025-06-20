@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Покупка товара | MR BEKZHAN</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 420px;
+      margin: 60px auto 0 auto;
+      background: #181818;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      padding: 40px 32px 32px 32px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 18px;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+    .cart-summary {
+      background: #222;
+      border-radius: 12px;
+      padding: 18px 14px 10px 14px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px #0007;
+      text-align: left;
+    }
+    .cart-summary-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ffd700;
+      letter-spacing: 1px;
+    }
+    .cart-summary-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      color: #fff;
+    }
+    .cart-summary-list li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #181818;
+      border-radius: 10px;
+      padding: 8px 10px 8px 8px;
+      box-shadow: 0 1px 6px #0005;
+    }
+    .cart-summary-img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #222;
+      margin-right: 8px;
+      border: 1px solid #333;
+      flex-shrink: 0;
+      box-shadow: 0 1px 4px #0007;
+    }
+    .cart-summary-info {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .cart-summary-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffd700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-summary-qty {
+      font-size: 14px;
+      color: #aaa;
+      margin-top: 2px;
+    }
+    .cart-summary-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+    .cart-summary-total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #ffd700;
+      font-size: 17px;
+    }
+    .product-name {
+      font-size: 22px;
+      margin-bottom: 24px;
+      color: #ffd700;
+      font-weight: bold;
+      display: none;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    input, select {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #222;
+      color: #fff;
+      font-size: 16px;
+    }
+    input[type="submit"] {
+      background: #ffd700;
+      color: #111;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    input[type="submit"]:hover {
+      background: #fff200;
+      transform: scale(1.04);
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: #ffd700;
+    }
+    .success {
+      color: #0f0;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container fade-in" id="mainContainer">
+    <h1>Покупка товара</h1>
+    <div class="cart-summary" id="cartSummary" style="display:none;">
+      <div class="cart-summary-title">Ваш заказ</div>
+      <ul class="cart-summary-list" id="cartSummaryList"></ul>
+      <div class="cart-summary-total" id="cartSummaryTotal"></div>
+    </div>
+    <div class="product-name" id="productName">Товар</div>
+    <form id="orderForm" autocomplete="off" class="fade-in">
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="tel" name="phone" placeholder="Телефон" required>
+      <!-- Количество убрано -->
+      <input type="submit" value="Оформить заказ">
+    </form>
+    <a href="catalog.html" class="back-link fade-in">← Вернуться в каталог</a>
+    <div class="success" id="successMsg" style="display:none;">Спасибо за заказ! Мы свяжемся с вами.</div>
+  </div>
+  <script>
+    // Получаем корзину из localStorage
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    }
+    // Получаем название товара из параметра URL (если переход с buy.html?product=...)
+    function getProductName() {
+      const params = new URLSearchParams(window.location.search);
+      const map = {
+        Marcus: 'Shirt “Marcus”',
+        Anuar: 'Shirt “Anuar”',
+        SmartHoodie: 'Street Smart Hoodie',
+        TShirt: 'Shirt “T-Shirt”',
+        Japanese: 'T-Shirt “Japanese”',
+        MegaKnight: 'Shirt “Mega Knight”'
+      };
+      const key = params.get('product');
+      return map[key] || '';
+    }
+
+    // Картинки для всех товаров
+    const productImages = {
+      "Shirt “Marcus”": "Marcus1.png",
+      "Shirt “Anuar”": "Anuar1.png",
+      "Street Smart Hoodie": "Star1.png",
+      "Shirt “T-Shirt”": "Shirt T-Shirt1.png",
+      "T-Shirt “Japanese”": "Japanese1.png",
+      "Shirt “Mega Knight”": "MegaKnight.png",
+      "Kurt": "Kurt.png",
+      "Clash Royale": "FatBitches.png",
+      "Mango": "Mango.png",
+      "Sybau": "Sybau.png",
+      "InternetGeroy": "InternetGeroy.png",
+      "ButRefused": "ButRefused.png",
+      "CheTam": "CheTam.png",
+      "Lev": "Lev.png",
+      "NaLeto": "NaLeto.png",
+      "Mops": "Mops.png",
+      // Для обратной совместимости:
+      "Classic Hoodie": "Kurt.png",
+      "Urban Cap": "FatBitches.png",
+      "Denim Jacket": "Mango.png",
+      "Sport Shorts": "Sybau.png",
+      "Retro Sweater": "InternetGeroy.png",
+      "Summer Dress": "ButRefused.png",
+      "Leather Belt": "CheTam.png",
+      "Basic Jeans": "Lev.png",
+      "Fashion Sneakers": "NaLeto.png",
+      "Winter Scarf": "Mops.png"
+    };
+
+    // Показываем корзину или товар из параметра
+    function renderOrderSummary() {
+      const cart = getCart();
+      const cartSummary = document.getElementById('cartSummary');
+      const cartSummaryList = document.getElementById('cartSummaryList');
+      const cartSummaryTotal = document.getElementById('cartSummaryTotal');
+      const productNameDiv = document.getElementById('productName');
+      let total = 0;
+
+      // Если корзина не пуста, показываем содержимое корзины
+      if (cart.length > 0) {
+        cartSummary.style.display = 'block';
+        productNameDiv.style.display = 'none';
+        cartSummaryList.innerHTML = '';
+        cart.forEach(item => {
+          // Названия для новых товаров
+          let title = item.title;
+          if (title === "Classic Hoodie") title = "Kurt";
+          if (title === "Urban Cap") title = "Clash Royale";
+          if (title === "Denim Jacket") title = "Mango";
+          if (title === "Sport Shorts") title = "Sybau";
+          if (title === "Retro Sweater") title = "InternetGeroy";
+          if (title === "Summer Dress") title = "ButRefused";
+          if (title === "Leather Belt") title = "CheTam";
+          if (title === "Basic Jeans") title = "Lev";
+          if (title === "Fashion Sneakers") title = "NaLeto";
+          if (title === "Winter Scarf") title = "Mops";
+          // Картинка
+          let img = item.img || productImages[title] || "";
+          cartSummaryList.innerHTML += `<li>
+            <img class="cart-summary-img" src="${img}" alt="${title}">
+            <div class="cart-summary-info">
+              <span class="cart-summary-title">${title}</span>
+              <span class="cart-summary-qty">x${item.qty}</span>
+            </div>
+            <span class="cart-summary-price">$${(item.price * item.qty).toFixed(2)}</span>
+          </li>`;
+          total += item.price * item.qty;
+        });
+        cartSummaryTotal.textContent = 'Итого: $' + total.toFixed(2);
+      } else {
+        // Если корзина пуста, показываем товар из параметра (старое поведение)
+        cartSummary.style.display = 'none';
+        const pname = getProductName();
+        // Названия для новых товаров
+        let displayName = pname;
+        if (pname === "Classic Hoodie") displayName = "Kurt";
+        if (pname === "Urban Cap") displayName = "Clash Royale";
+        if (pname === "Denim Jacket") displayName = "Mango";
+        if (pname === "Sport Shorts") displayName = "Sybau";
+        if (pname === "Retro Sweater") displayName = "InternetGeroy";
+        if (pname === "Summer Dress") displayName = "ButRefused";
+        if (pname === "Leather Belt") displayName = "CheTam";
+        if (pname === "Basic Jeans") displayName = "Lev";
+        if (pname === "Fashion Sneakers") displayName = "NaLeto";
+        if (pname === "Winter Scarf") displayName = "Mops";
+        productNameDiv.style.display = displayName ? 'block' : 'none';
+        productNameDiv.textContent = displayName || 'Товар';
+      }
+    }
+
+    renderOrderSummary();
+
+    // Анимация появления
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        document.getElementById('mainContainer').classList.add('show');
+        document.querySelectorAll('.fade-in').forEach((el, i) => {
+          setTimeout(() => el.classList.add('show'), 200 + i * 120);
+        });
+      }, 100);
+    });
+
+    // Простая имитация отправки формы
+    document.getElementById('orderForm').onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('orderForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+      // Очищаем корзину после заказа
+      localStorage.removeItem('cart');
+    };
+  </script>
+</body>
+</html>

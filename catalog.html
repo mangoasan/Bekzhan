@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Каталог одежды | MR BEKZHAN</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .nav {
+      padding: 30px 40px 0 0;
+      text-align: right;
+    }
+    .nav a {
+      color: #aaa;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 18px;
+    }
+    .nav a.active, .nav a:hover {
+      color: #fff;
+      font-weight: bold;
+    }
+    h1 {
+      text-align: center;
+      font-size: 56px;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      padding: 40px 60px 60px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: stretch;
+    }
+    .catalog-card {
+      background: #181818;
+      border: 1px solid #444;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      transition: box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 320px; /* фиксированная высота для выравнивания */
+      box-sizing: border-box;
+      justify-content: flex-start;
+      cursor: pointer;
+    }
+    .catalog-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transform: translateY(-10px) scale(1.04);
+      z-index: 2;
+    }
+    .catalog-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      min-height: 36px; /* для выравнивания названий */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial Black', Arial, sans-serif;
+      color: #fff;
+      letter-spacing: 1px;
+      text-align: center;
+      width: 100%;
+      word-break: break-word;
+      line-height: 1.15;
+      /* Добавлено для переноса длинных названий */
+      white-space: normal;
+    }
+    .catalog-price {
+      font-size: 16px;
+      color: #ddd;
+      margin-bottom: 10px;
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+    .catalog-card img {
+      width: 100%;
+      max-width: 180px;
+      height: 140px;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .back-button {
+      display: block;
+      width: 180px;
+      margin: 40px auto 30px auto;
+      padding: 16px 0;
+      background: transparent;
+      border: 2px solid #fff;
+      border-radius: 40px;
+      color: #fff;
+      text-align: center;
+      font-size: 20px;
+      text-decoration: none;
+      transition: all 0.3s;
+      letter-spacing: 2px;
+    }
+    .back-button:hover {
+      background: #fff;
+      color: #111;
+    }
+    .copyright {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .cart-fixed {
+      position: fixed;
+      right: 32px;
+      bottom: 32px;
+      background: #181818;
+      color: #fff;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      min-width: 340px;
+      max-width: 96vw;
+      z-index: 1001;
+      padding: 28px 28px 18px 28px;
+      display: none;
+      flex-direction: column;
+      font-size: 18px;
+      border: 2px solid #ffd700;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .cart-fixed.active {
+      display: flex;
+      animation: cartShow 0.3s;
+    }
+    @keyframes cartShow {
+      from { transform: translateY(60px) scale(0.95); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+    .cart-fixed-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #ffd700;
+      letter-spacing: 1px;
+    }
+    .cart-fixed-list {
+      list-style: none;
+      margin: 0 0 10px 0;
+      padding: 0;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .cart-fixed-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 4px;
+      font-size: 17px;
+    }
+    .cart-fixed-remove {
+      color: #e74c3c;
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 10px;
+      background: none;
+      border: none;
+    }
+    .cart-fixed-empty {
+      color: #aaa;
+      text-align: center;
+      margin: 18px 0 8px 0;
+      font-size: 16px;
+    }
+    .cart-fixed-total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 8px;
+      font-size: 19px;
+      color: #fff;
+    }
+    .cart-fixed-btn {
+      margin-top: 14px;
+      padding: 13px 0;
+      background: #ffd700;
+      color: #111;
+      border: none;
+      border-radius: 18px;
+      font-size: 19px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      letter-spacing: 1px;
+      width: 100%;
+    }
+    .cart-fixed-btn:hover {
+      background: #fff200;
+      color: #111;
+      transform: scale(1.03);
+    }
+    .add-to-cart-btn {
+      margin-top: 12px;
+      padding: 13px 0;
+      background: #fff;
+      color: #181818;
+      border: none;
+      border-radius: 32px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 12px #fff2, 0 1px 6px #0004;
+      letter-spacing: 1px;
+      width: 100%;
+      outline: none;
+    }
+    .add-to-cart-btn:hover {
+      background: #232323;
+      color: #fff;
+      transform: scale(1.04);
+      box-shadow: 0 4px 24px #fff4, 0 2px 12px #0006;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .fade-in.show {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav fade-in" style="position:relative;">
+    <a href="MrWest.html">Главная</a>
+    <a href="catalog.html" class="active">Каталог</a>
+    <!-- корзина-иконка больше не нужна -->
+  </div>
+  <h1 class="fade-in">Каталог одежды</h1>
+  <div class="catalog-grid fade-in" id="catalogGrid">
+    <div class="catalog-card" data-title="Shirt “Marcus”" data-price="30.00" data-img="Marcus1.png">
+      <img src="Marcus1.png" alt="Shirt Marcus" style="height: 140px; object-fit: contain;">
+      <div class="catalog-title">Shirt “Marcus”</div>
+      <div class="catalog-price">$30.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Shirt “Anuar”" data-price="30.00" data-img="Anuar1.png">
+      <img src="Anuar1.png" alt="Shirt Anuar">
+      <div class="catalog-title">Shirt “Anuar”</div>
+      <div class="catalog-price">$30.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Street Smart Hoodie" data-price="25.00" data-img="Star1.png">
+      <img src="Star1.png" alt="Street Smart Hoodie">
+      <div class="catalog-title">Street Smart Hoodie</div>
+      <div class="catalog-price">$25.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Shirt “T-Shirt”" data-price="30.00" data-img="Shirt T-Shirt1.png">
+      <img src="Shirt T-Shirt1.png" alt="Shirt T-Shirt" style="height: 140px; object-fit: contain;">
+      <div class="catalog-title">Shirt “T-Shirt”</div>
+      <div class="catalog-price">$30.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="T-Shirt “Japanese”" data-price="20.00" data-img="Japanese1.png">
+      <img src="Japanese1.png" alt="T-Shirt Japanese">
+      <div class="catalog-title">T-Shirt “Japanese”</div>
+      <div class="catalog-price">$20.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Shirt “Mega Knight”" data-price="25.00" data-img="MegaKnight.png">
+      <img src="MegaKnight.png" alt="Shirt Mega Knight">
+      <div class="catalog-title">Shirt “Mega Knight”</div>
+      <div class="catalog-price">$25.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Kurt" data-price="28.00" data-img="Kurt.png">
+      <img src="Kurt.png" alt="Kurt">
+      <div class="catalog-title">Kurt</div>
+      <div class="catalog-price">$28.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Clash Royale" data-price="15.00" data-img="FatBitches.png">
+      <img src="FatBitches.png" alt="Clash Royale">
+      <div class="catalog-title">Clash Royale</div>
+      <div class="catalog-price">$15.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Mango" data-price="45.00" data-img="Mango.png">
+      <img src="Mango.png" alt="Mango">
+      <div class="catalog-title">Mango</div>
+      <div class="catalog-price">$45.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Sybau" data-price="18.00" data-img="Sybau.png">
+      <img src="Sybau.png" alt="Sybau">
+      <div class="catalog-title">Sybau</div>
+      <div class="catalog-price">$18.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="InternetGeroy" data-price="32.00" data-img="InternetGeroy.png">
+      <img src="InternetGeroy.png" alt="InternetGeroy">
+      <div class="catalog-title">InternetGeroy</div>
+      <div class="catalog-price">$32.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="ButRefused" data-price="35.00" data-img="ButRefused.png">
+      <img src="ButRefused.png" alt="ButRefused">
+      <div class="catalog-title">ButRefused</div>
+      <div class="catalog-price">$35.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="CheTam" data-price="12.00" data-img="CheTam.png">
+      <img src="CheTam.png" alt="CheTam">
+      <div class="catalog-title">CheTam</div>
+      <div class="catalog-price">$12.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Lev" data-price="27.00" data-img="Lev.png">
+      <img src="Lev.png" alt="Lev">
+      <div class="catalog-title">Lev</div>
+      <div class="catalog-price">$27.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="NaLeto" data-price="40.00" data-img="NaLeto.png">
+      <img src="NaLeto.png" alt="NaLeto">
+      <div class="catalog-title">NaLeto</div>
+      <div class="catalog-price">$40.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+    <div class="catalog-card" data-title="Mops" data-price="14.00" data-img="Mops.png">
+      <img src="Mops.png" alt="Mops">
+      <div class="catalog-title">Mops</div>
+      <div class="catalog-price">$14.00</div>
+      <button class="add-to-cart-btn">В корзину</button>
+    </div>
+  </div>
+  <a href="MrWest.html" class="back-button fade-in">← На главную</a>
+  <div class="copyright fade-in">
+    © 2008-2025 Все права защищены
+  </div>
+
+  <!-- Фиксированная корзина снизу справа -->
+  <div class="cart-fixed fade-in" id="cartFixed">
+    <div class="cart-fixed-title">Корзина</div>
+    <ul class="cart-fixed-list" id="cartFixedList"></ul>
+    <div class="cart-fixed-empty" id="cartFixedEmpty">Корзина пуста</div>
+    <div class="cart-fixed-total" id="cartFixedTotal"></div>
+    <button class="cart-fixed-btn" id="cartFixedBuy" style="display:none;">Оформить заказ</button>
+  </div>
+  <script>
+    // Корзина в localStorage
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart') || '[]');
+    }
+    function setCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    function updateCartFixed() {
+      const cart = getCart();
+      const cartFixed = document.getElementById('cartFixed');
+      const cartFixedList = document.getElementById('cartFixedList');
+      const cartFixedEmpty = document.getElementById('cartFixedEmpty');
+      const cartFixedTotal = document.getElementById('cartFixedTotal');
+      const cartFixedBuy = document.getElementById('cartFixedBuy');
+      cartFixedList.innerHTML = '';
+      let total = 0;
+      if (cart.length === 0) {
+        cartFixed.classList.remove('active');
+        cartFixedEmpty.style.display = 'block';
+        cartFixedTotal.textContent = '';
+        cartFixedBuy.style.display = 'none';
+      } else {
+        cartFixed.classList.add('active');
+        cartFixedEmpty.style.display = 'none';
+        cart.forEach((item, idx) => {
+          total += item.qty * item.price;
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span>${item.title} <small style="color:#aaa;">x${item.qty}</small></span>
+            <span>
+              $${(item.price * item.qty).toFixed(2)}
+              <button class="cart-fixed-remove" data-idx="${idx}" title="Удалить">&#10006;</button>
+            </span>
+          `;
+          cartFixedList.appendChild(li);
+        });
+        cartFixedTotal.textContent = 'Итого: $' + total.toFixed(2);
+        cartFixedBuy.style.display = 'block';
+      }
+    }
+    function addToCart(title, price, img) {
+      let cart = getCart();
+      const idx = cart.findIndex(item => item.title === title);
+      if (idx >= 0) {
+        cart[idx].qty += 1;
+      } else {
+        cart.push({ title, price: parseFloat(price), img, qty: 1 });
+      }
+      setCart(cart);
+      updateCartFixed();
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartFixed();
+      // Клик по "В корзину"
+      document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const card = btn.closest('.catalog-card');
+          addToCart(card.dataset.title, card.dataset.price, card.dataset.img);
+        });
+      });
+      // Удалить товар из корзины
+      document.getElementById('cartFixedList').onclick = function(e) {
+        if (e.target.classList.contains('cart-fixed-remove')) {
+          let cart = getCart();
+          cart.splice(Number(e.target.dataset.idx), 1);
+          setCart(cart);
+          updateCartFixed();
+        }
+      };
+      // Кнопка "Оформить заказ"
+      document.getElementById('cartFixedBuy').onclick = function() {
+        window.location.href = 'buy.html';
+      };
+      // Анимация появления секций при загрузке
+      setTimeout(() => {
+        document.querySelectorAll('.fade-in').forEach((el, i) => {
+          setTimeout(() => el.classList.add('show'), i * 120);
+        });
+      }, 120);
+    });
+  </script>
+</body>
+</html>
